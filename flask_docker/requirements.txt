@@ -1,0 +1,10 @@
+segno
+flask
+flask-wtf
+flask-talisman
+flask-compress
+mysql-connector-python
+gevent
+gunicorn
+pyotp
+pypdftk

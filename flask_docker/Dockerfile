@@ -16,7 +16,7 @@ RUN echo "java -jar pdftk-all.jar \$@" > /usr/bin/pdftk
 
 RUN chmod +x /usr/bin/pdftk
 
-RUN export PDFTK_PATH='/usr/bin/pdftk'
+ENV PDFTK_PATH '/usr/bin/pdftk'
 
 RUN pip install -r requirements.txt --no-cache
 
