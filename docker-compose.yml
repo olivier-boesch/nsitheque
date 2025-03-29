@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  nginx_nsitheque:
+    image: nginx:latest
+    container_name: nginx_container_nsitheque
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/conf:/etc/nginx/conf.d
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      flask_nsitheque:
+        condition: service_started
+    networks:
+      - nsitheque_network
+
+  mariadb_nsitheque:
+    image: mariadb:latest
+    container_name: mariadb_container_nsitheque
+    environment:
+      MYSQL_ROOT_PASSWORD: 5iTPcO7gyJBew6-puqwIzQ
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./mariadb:/var/lib/mysql
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nsitheque_network
+
+  flask_nsitheque:
+    image: nsitheque:staging
+    container_name: second_oral_container_nsitheque
+    build: ./flask_docker
+    volumes:
+      - ./app:/app
+    depends_on:
+      mariadb_nsitheque:
+        condition: service_healthy
+    environment:
+      SQL_USER: nsitheque
+      SQL_PASSWORD: pnXc-36pel3S3ZxkzkT3Lw
+      SQL_HOST: mariadb_nsitheque
+      SQL_DATABASE: NsiTheque
+      LOGIN_KEY: KVhrx7g2_xtgmMXvxsX38UXQwBNY2xjDmttgE1YgWgT3kng46rDTjdzoH_y4zWibFEQi4lcMQ56n3RnIcastIIO3iG2iKMuhAgBQS20PPQkSQ9z-izqrCa1F7gIC-imE2R_PANCAWxDqmPfOhAloC1NoJwVqX-uGWE15O6GivPc
+      APP_SECRET_KEY: -LAHrxofLbaEx5eSAjTa0S6kMWQP21BguGvKDqvxwJI
+      SERVER_NAME: nsitheque.fr
+    networks:
+      - nsitheque_network
+
+networks:
+  nsitheque_network:
+    driver: bridge
