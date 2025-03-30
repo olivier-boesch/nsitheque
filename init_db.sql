@@ -8,22 +8,31 @@ FLUSH PRIVILEGES;
 -- themes
 CREATE TABLE IF NOT EXISTS Theme(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    -- nom du theme
     nom TEXT NOT NULL ,
+    -- theme parent
     parent INTEGER
 );
 
 CREATE TABLE ZoneGeo(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    nom TEXT NOT NULL
+    -- nom long
+    nom TEXT NOT NULL,
+    -- raccourci sur sujet
+    nom_court TEXT NOT NULL
 );
 
 -- Sujets Ecrit --------------------------------------
 -- sujet
 CREATE TABLE IF NOT EXISTS Sujet_ecrit(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    -- zone geographique du sujet (fk)
     zonegeo INTEGER NOT NULL,
+    -- reference sujet
     Reference TEXT NOT NULL,
+    -- année (4 chiffres)
     Annee INTEGER,
+    -- nom de fichier stocké (____.pdf)
     fichier TEXT NOT NULL,
     FOREIGN KEY (zonegeo) REFERENCES ZoneGeo(id)
 );
@@ -31,17 +40,24 @@ CREATE TABLE IF NOT EXISTS Sujet_ecrit(
 -- exercice
 CREATE TABLE IF NOT EXISTS Exercice_ecrit(
     id INTEGER PRIMARY KEY  AUTO_INCREMENT,
+    -- numéro dans le sujet
     numero INTEGER NOT NULL,
+    -- sujet (fk)
     sujet INTEGER,
+    -- étendue de l'exercice dans le sujet ( x-y )
     pages TEXT NOT NULL,
+    -- étendue de l'annexe dans le sujet ( x-y ) ou NULL sinon
     annexes TEXT,
+    -- nom de fichier stocké (____.pdf) ou NULL si non encore extrait
     fichier TEXT,
     FOREIGN KEY (sujet) REFERENCES Sujet_ecrit (id)
 );
 
 -- theme <-> exercice
 CREATE TABLE IF NOT EXISTS Theme_Exercice_ecrit(
+    -- exercice (fk)
     exercice INTEGER NOT NULL,
+    -- theme (fk)
     theme INTEGER NOT NULL,
     PRIMARY KEY (exercice, theme),
     FOREIGN KEY (theme) REFERENCES Theme(id),
@@ -52,25 +68,35 @@ CREATE TABLE IF NOT EXISTS Theme_Exercice_ecrit(
 -- sujet
 CREATE TABLE IF NOT EXISTS Sujet_oral(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    -- référence sujet (2 chiffres)
     Reference TEXT NOT NULL,
+    -- année (4 chiffres)
     Annee INTEGER,
+    -- nom de fichier stocké (____.pdf)
     fichier TEXT NOT NULL
 );
 
 -- exercice
 CREATE TABLE IF NOT EXISTS Exercice_oral(
     id INTEGER PRIMARY KEY  AUTO_INCREMENT,
+    -- numéro dans le sujet
     numero INTEGER NOT NULL,
+    -- sujet (fk)
     sujet INTEGER,
+    -- étendue de l'exercice dans le sujet ( x-y )
     pages TEXT NOT NULL,
+    -- nom de fichier stocké (____.pdf) ou NULL si non encore extrait
     fichier TEXT,
+    -- fichier python à compléter (pour les ex type 2) ou NULL si ex type 1
     fichier_python TEXT,
     FOREIGN KEY (sujet) REFERENCES Sujet_oral (id)
 );
 
 -- theme <-> exercice
 CREATE TABLE IF NOT EXISTS Theme_Exercice_oral(
+    -- exercice (fk)
     exercice INTEGER NOT NULL,
+    -- theme (fk)
     theme INTEGER NOT NULL,
     PRIMARY KEY (exercice, theme),
     FOREIGN KEY (theme) REFERENCES Theme(id),
