@@ -26,15 +26,16 @@ CREATE TABLE ZoneGeo(
 -- sujet
 CREATE TABLE IF NOT EXISTS Sujet_ecrit(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    -- zone geographique du sujet (fk)
-    zonegeo INTEGER NOT NULL,
     -- reference sujet
-    Reference TEXT NOT NULL,
+    reference TEXT NOT NULL,
     -- année (4 chiffres)
-    Annee INTEGER,
+    annee INTEGER NOT NULL ,
+    -- jour (1,2,3 ...)
+    jour INTEGER ,
+    -- session (1 -> juin, 2- sept)
+    session INTEGER,
     -- nom de fichier stocké (____.pdf)
-    fichier TEXT NOT NULL,
-    FOREIGN KEY (zonegeo) REFERENCES ZoneGeo(id)
+    fichier TEXT NOT NULL
 );
 
 -- exercice
@@ -62,6 +63,14 @@ CREATE TABLE IF NOT EXISTS Theme_Exercice_ecrit(
     PRIMARY KEY (exercice, theme),
     FOREIGN KEY (theme) REFERENCES Theme(id),
     FOREIGN KEY (exercice) REFERENCES Exercice_ecrit(id)
+);
+
+CREATE TABLE ZoneGeo_Sujet_ecrit(
+    zonegeo INTEGER,
+    sujet INTEGER,
+    PRIMARY KEY (zonegeo, sujet),
+    FOREIGN KEY (zonegeo) REFERENCES ZoneGeo(id),
+    FOREIGN KEY (sujet) REFERENCES Sujet_ecrit(id)
 );
 
 -- Sujets Oral --------------------------------------
@@ -102,3 +111,14 @@ CREATE TABLE IF NOT EXISTS Theme_Exercice_oral(
     FOREIGN KEY (theme) REFERENCES Theme(id),
     FOREIGN KEY (exercice) REFERENCES Exercice_oral(id)
 );
+
+
+INSERT INTO ZoneGeo (nom, nom_court) VALUES
+                                         ("Amérique du Nord", "AN"),
+                                         ("Amérique du Sud", "AS"),
+                                         ("Métropole", "ME"),
+                                         ("Asie", "JA"),
+                                         ("Centres étrangers", "G1"),
+                                         ("Nouvelle Calédonie", "NC"),
+                                         ("Liban", "LI"),
+                                         ("Polynésie", "PO");
