@@ -7,29 +7,36 @@ FLUSH PRIVILEGES;
 
 -- themes
 CREATE TABLE IF NOT EXISTS Theme(
-  id INTEGER PRIMARY KEY AUTO_INCREMENT,
-  nom TEXT NOT NULL ,
-  parent INTEGER
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nom TEXT NOT NULL ,
+    parent INTEGER
+);
+
+CREATE TABLE ZoneGeo(
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nom TEXT NOT NULL
 );
 
 -- Sujets Ecrit --------------------------------------
 -- sujet
 CREATE TABLE IF NOT EXISTS Sujet_ecrit(
     id INTEGER PRIMARY KEY,
+    zonegeo INTEGER NOT NULL,
     Reference TEXT NOT NULL,
     Annee INTEGER,
-    fichier TEXT
+    fichier TEXT NOT NULL,
+    FOREIGN KEY (zonegeo) REFERENCES ZoneGeo(id)
 );
 
 -- exercice
 CREATE TABLE IF NOT EXISTS Exercice_ecrit(
-  id INTEGER PRIMARY KEY  AUTO_INCREMENT,
-  numero INTEGER NOT NULL,
-  sujet INTEGER,
-  pages TEXT NOT NULL,
-  annexes TEXT,
-  fichier TEXT,
-  FOREIGN KEY (sujet) REFERENCES Sujet_ecrit (id)
+    id INTEGER PRIMARY KEY  AUTO_INCREMENT,
+    numero INTEGER NOT NULL,
+    sujet INTEGER,
+    pages TEXT NOT NULL,
+    annexes TEXT,
+    fichier TEXT,
+    FOREIGN KEY (sujet) REFERENCES Sujet_ecrit (id)
 );
 
 -- theme <-> exercice
@@ -47,18 +54,18 @@ CREATE TABLE IF NOT EXISTS Sujet_oral(
     id INTEGER PRIMARY KEY,
     Reference TEXT NOT NULL,
     Annee INTEGER,
-    fichier TEXT
+    fichier TEXT NOT NULL
 );
 
 -- exercice
 CREATE TABLE IF NOT EXISTS Exercice_oral(
-  id INTEGER PRIMARY KEY  AUTO_INCREMENT,
-  numero INTEGER NOT NULL,
-  sujet INTEGER,
-  pages TEXT NOT NULL,
-  annexes TEXT,
-  fichier TEXT,
-  FOREIGN KEY (sujet) REFERENCES Sujet_oral (id)
+    id INTEGER PRIMARY KEY  AUTO_INCREMENT,
+    numero INTEGER NOT NULL,
+    sujet INTEGER,
+    pages TEXT NOT NULL,
+    fichier TEXT,
+    fichier_python TEXT,
+    FOREIGN KEY (sujet) REFERENCES Sujet_oral (id)
 );
 
 -- theme <-> exercice
