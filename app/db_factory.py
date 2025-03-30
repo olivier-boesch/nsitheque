@@ -3,7 +3,7 @@ Interface de dev/prod DB pour SQLITE3/MariaDb
 
 """
 
-from app_secrets import DB_PARAMS
+from app.app_secrets import DB_PARAMS
 import mysql.connector
 import sqlite3
 
