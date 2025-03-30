@@ -20,7 +20,7 @@ CREATE TABLE ZoneGeo(
 -- Sujets Ecrit --------------------------------------
 -- sujet
 CREATE TABLE IF NOT EXISTS Sujet_ecrit(
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     zonegeo INTEGER NOT NULL,
     Reference TEXT NOT NULL,
     Annee INTEGER,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS Theme_Exercice_ecrit(
 -- Sujets Oral --------------------------------------
 -- sujet
 CREATE TABLE IF NOT EXISTS Sujet_oral(
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     Reference TEXT NOT NULL,
     Annee INTEGER,
     fichier TEXT NOT NULL
