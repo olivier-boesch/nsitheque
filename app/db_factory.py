@@ -3,11 +3,19 @@ Interface de dev/prod DB pour SQLITE3/MariaDb
 
 """
 
-from app.app_secrets import DB_PARAMS
+from app_secrets import DB_PARAMETERS
 import mysql.connector
 import sqlite3
 
 # ------------------------------ QUERIES
+
+SELECT_LIST_THEMES = """
+    select * from Theme
+"""
+
+SELECT_ZONE_GEO = """
+    select * from ZoneGeo
+"""
 
 # ------------------------------ DB OBJECT
 
@@ -23,7 +31,7 @@ class DbInterface:
         self.connect()
 
     def connect(self):
-        self.con = mysql.connector.connect(**DB_PARAMS)
+        self.con = mysql.connector.connect(**DB_PARAMETERS)
 
     def make_sql_select(self, request, *args):
         if not self.con.is_connected():
@@ -51,8 +59,7 @@ class DevDbInterface(DbInterface):
         super().__init__()
 
     def connect(self):
-        self.con = sqlite3.connect(self.base)
-        self.con.row_factory = self.dict_factory
+        pass
 
     @staticmethod
     def dict_factory(cursor, row):
@@ -62,18 +69,22 @@ class DevDbInterface(DbInterface):
         return d
 
     def make_sql_select(self, request, *args):
-        with self.con.cursor() as cur:
-            if args:
-                cur.execute(request.format(*args))
-            else:
-                cur.execute(request)
-            data = cur.fetchall()
+        self.con = sqlite3.connect(self.base)
+        self.con.row_factory = self.dict_factory
+        cur = self.con.cursor()
+        if args:
+            cur.execute(request.format(*args))
+        else:
+            cur.execute(request)
+        data = cur.fetchall()
         self.con.commit()
         return data
 
     def make_sql_update(self, request, **kwargs):
-        with self.con.cursor() as cur:
-            cur.execute(request.format(**kwargs))
+        self.con = sqlite3.connect(self.base)
+        self.con.row_factory = self.dict_factory
+        cur = self.con.cursor()
+        cur.execute(request.format(**kwargs))
         self.con.commit()
 
 
