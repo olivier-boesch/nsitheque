@@ -12,7 +12,7 @@ __dev__ = True
 
 from flask import Flask, render_template, request, abort, session, url_for, redirect, flash, make_response
 from flask_compress import Compress
-from db_factory import create_db_object
+from db_factory import *
 from app_secrets import *
 import pyotp
 from urllib.parse import unquote, quote
@@ -245,7 +245,7 @@ def chronologie_ecrit():
     pass
 
 
-@app.route('/chronologie-ecrit/<annee:int>')
+@app.route('/chronologie-ecrit/<annee>')
 def par_annee(annee):
     """sujets écrits par année"""
     pass
@@ -253,8 +253,8 @@ def par_annee(annee):
 
 @app.route('/geo')
 def regions():
-    """par région géographique"""
-    pass
+    liste_regions = db_get(SELECT_ZONE_GEO)
+    return str(liste_regions), 200
 
 
 @app.route('/geo/<region>')
@@ -266,7 +266,8 @@ def par_region(region):
 @app.route('/theme')
 def themes():
     """index des themes"""
-    pass
+    themes = db_get(SELECT_LIST_THEMES)
+    return str(themes), 200
 
 
 @app.route('/theme/<theme>')
@@ -278,7 +279,7 @@ def par_theme(theme):
 # ------------ Backend (secure part)
 
 def admin_required(f):
-    """decorator where admin is required"""
+    """decorator where admin access is required"""
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -340,14 +341,15 @@ def gestion_themes():
     abort(405)
 
 
-@app.route('/gestion/sujet-ecrit', methods=['GET', 'POST'])
+@app.route('/gestion/ajout-sujet-ecrit', methods=['GET', 'POST'])
 @admin_required
-def gestion_sujet_ecrit():
-    """gestion des sujets de l'écrit"""
+def gestion_ajout_sujet_ecrit():
+    """ajout des sujets de l'écrit"""
+    form = SujetEcritForm()
     if request.method == 'POST':
         pass
     if request.method == 'GET':
-        pass
+        themes = db_get()
     abort(405)
 
 
